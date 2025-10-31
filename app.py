@@ -1,4 +1,4 @@
-# -------------------- Safe Imports -------------------- #
+# -------Imports ------ #
 import sys
 import os
 import json
@@ -19,8 +19,6 @@ TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 # TWILIO_WHATSAPP_NUMBER is typically not used for the webhook, but kept for clarity
 TWILIO_WHATSAPP_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER") 
 
-# IMPORTANT: This variable can hold the public HTTPS URL for an IMAGE or a VIDEO (.mp4, .mov).
-# Reverted to basic mode:
 # SALON_MEDIA_URL = "https://videos.pexels.com/video-files/3847844/3847844-hd_1920_1080_30fps.mp4"
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
@@ -28,14 +26,14 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_DATABASE = os.getenv("DB_DATABASE", "glow_haven")
 
-# Check for essential Twilio credentials before starting
+# Check for essential Twilio credentials 
 if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
     print("FATAL ERROR: TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN not set in .env file.")
     sys.exit(1)
 
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-# -------------------- Global DB and Cursor (Managed by reconnect logic) -------------------- #
+# ----- Global DB and Cursor  ---- #
 db = None
 cursor = None
 
@@ -194,10 +192,7 @@ def whatsapp():
     resp = MessagingResponse()
     msg = resp.message()
 
-    # CRITICAL SPEED IMPROVEMENT: Use the single function to ensure DB readiness.
-    # If the connection is broken, this will attempt to restore it immediately
-    # before any DB operation, preventing a full crash while minimizing latency 
-    # when the connection is already open and valid.
+    # CRITICAL SPEED IMPROVEMENT.
     try:
         db, cursor = get_db_connection()
     except SystemExit:
@@ -430,11 +425,6 @@ def whatsapp():
                 save_session(phone_number, 'menu', {})
                 
                 # 3. DECOUPLE BLOCKING TASK: Generate PDF *after* sending the response.
-                # Since we cannot run this in the background in this single-threaded Flask setup 
-                # without external libraries, we will keep the call here for completeness
-                # but note that in a real production environment, this should be offloaded 
-                # to a background worker (e.g., Celery) to ensure instant reply speed.
-                # For this assignment, we leave the call here to complete the requirement:
                 pdf_file = generate_pdf_receipt(temp_data['booking_id'])
                 print(f"INFO: PDF receipt generated/logged: {pdf_file}")
                 
@@ -511,3 +501,4 @@ if __name__ == "__main__":
     print(f"Starting Flask App. DB: {DB_DATABASE}@{DB_HOST}")
     # Run the app, listening on all public IPs (0.0.0.0) so Ngrok can access it
     app.run(host='0.0.0.0', port=5000, debug=True)
+
