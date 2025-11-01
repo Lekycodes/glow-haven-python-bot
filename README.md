@@ -1,4 +1,4 @@
-Glow Haven Beauty Lounge — WhatsApp Chatbot
+💅 Glow Haven Beauty Lounge — WhatsApp Chatbot
 
 1. Project Overview & Objective
 
@@ -66,77 +66,119 @@ Context Preservation: The bot remembers where the user is in the booking process
 
 Robust Error Handling: Users can be guided back to a specific step without losing their prior input.
 
-3. How to Test & Interact
+3. Flow Diagram
 
-To begin a test, simply send any greeting (e.g., "Hi," "Hello," "Menu") to the test number below.
-
-Step
-
-User Input
-
-Expected Bot Response
-
-Notes
-
-1. Start
-
-Hi
-
-Responds with the main menu (1, 2, 3, 4).
-
-Full name of client is stored in the database upon first interaction.
-
-2. Initiate Booking
-
-2 (Book Appointment)
-
-Prompts the user to select a service category (e.g., 1. Hair Care).
+User (WhatsApp)
+      ↓
+Twilio WhatsApp API
+      ↓
+Flask App (app.py)
+      ↓
+MySQL Database <—> FPDF Receipt Generator
 
 
+4. How to Test & Interact
 
-3. Select Service
-
-1 (Hair Care)
-
-Displays the list of services and prices (from MySQL).
-
-
-
-4. Choose Item
-
-2 (e.g., Silk Press)
-
-Prompts for preferred date and time.
-
-
-
-5. Provide Date
-
-2025-11-05 14:00
-
-Asks the user to confirm the booking or proceed to payment.
-
-
-
-6. Pay Deposit
-
-3 (Pay Deposit)
-
-Simulates the M-Pesa Pochi transaction and confirms.
-
-This is where the PDF receipt is generated and sent.
-
-7. New Session
-
-Hi (After paying)
-
-Resets the session and returns to the main menu.
-
-All previous data is saved to the bookings table.
+To begin a test, simply send any greeting (e.g., "Hi," "Hello," "Menu") to the test number.
 
 WhatsApp Test Number: +14155238886
 
-4. Assumptions & Future Improvements
+Input
+
+Bot Menu Response
+
+Action / Notes
+
+hi
+
+Main Menu (1-4)
+
+Confirms the bot is running and resets the user session.
+
+2
+
+Service Category Selection (e.g., Hair Care)
+
+Initiates the multi-step booking process.
+
+1
+
+Service List (e.g., Wash & Blow Dry)
+
+Displays services pulled directly from the services table.
+
+2025-11-05 14:00
+
+Asks to confirm booking or pay deposit.
+
+The bot validates and stores the booking details.
+
+3
+
+"Thank you for paying..."
+
+Simulates deposit payment, records the booking, and sends the PDF receipt.
+
+5. Local Setup and Deployment
+
+To run this application, you must have Python 3.8+, pip, MySQL, and Ngrok installed.
+
+Step 1: Clone and Install Dependencies
+
+# Clone the repository
+git clone [https://github.com/Lekycodes/glow-haven-python-bot](https://github.com/Lekycodes/glow-haven-python-bot)
+cd glow-haven-python-bot
+
+# Create and activate a virtual environment (optional, but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows, use 'venv\Scripts\activate'
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+
+Step 2: Database Setup
+
+Start your MySQL server.
+
+Run the schema.sql file to create the database (glow_haven), the required tables (users, services, bookings, feedback, sessions), and populate the service menu.
+
+mysql -u [your_user] -p < schema.sql
+
+
+Step 3: Environment Variables
+
+Create a file named .env in the root directory and populate it with your credentials:
+
+# Twilio Credentials
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_PHONE_NUMBER=whatsapp:+14155238886
+
+# MySQL Database Connection Details
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_HOST=localhost
+DB_NAME=glow_haven
+
+
+Step 4: Run the Flask Application
+
+Run the application on port 5000:
+
+python app.py
+
+
+Step 5: Expose the Webhook with Ngrok
+
+In a separate terminal, start Ngrok to tunnel port 5000 to a public HTTPS URL:
+
+ngrok http 5000
+
+
+Copy the resulting HTTPS URL (e.g., https://*****.ngrok-free.app). You must then paste this URL, followed by /whatsapp, into the Twilio WhatsApp Sandbox Webhook setting (e.g., https://*****.ngrok-free.app/whatsapp).
+
+6. Assumptions & Future Improvements
 
 Assumptions Made
 
