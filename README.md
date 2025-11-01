@@ -45,9 +45,7 @@ MySQL Database  ←→  FPDF Receipt Generator
 
 4.How to Interact with the Bot
 
-Save your Twilio sandbox/test number (e.g., +14155238886) to your phone.
-
-Send the join code (from your Twilio Sandbox dashboard) to activate the session.
+test number +14155238886 
 
 Type "hi" or any greeting.
 
@@ -103,4 +101,3 @@ WhatsApp Test Number
 Include this in your submission (e.g.):
 
 Test Number: +14155238886
-Join Code: join ruler-thee
