@@ -1,4 +1,4 @@
-💅 Glow Haven Beauty Lounge — WhatsApp Chatbot
+Glow Haven Beauty Lounge — WhatsApp Chatbot
 
 1. Project Overview & Objective
 
