@@ -1,0 +1,19 @@
+Core Web Framework
+
+Flask
+
+Twilio Messaging API
+
+twilio
+
+Database Connector (for MySQL)
+
+mysql-connector-python
+
+Environment Variable Loading
+
+python-dotenv
+
+PDF Receipt Generation
+
+fpdf2
