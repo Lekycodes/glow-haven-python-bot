@@ -501,4 +501,3 @@ if __name__ == "__main__":
     print(f"Starting Flask App. DB: {DB_DATABASE}@{DB_HOST}")
     # Run the app, listening on all public IPs (0.0.0.0) so Ngrok can access it
     app.run(host='0.0.0.0', port=5000, debug=True)
-
